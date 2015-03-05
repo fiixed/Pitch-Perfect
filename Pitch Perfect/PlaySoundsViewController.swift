@@ -23,6 +23,8 @@ class PlaySoundsViewController: UIViewController {
         audioPlayer.enableRate = true
         
         audioEngine = AVAudioEngine()
+        
+        // Convert recievedAudio to AVAudioFile
         audioFile = AVAudioFile(forReading: receivedAudio.filePathUrl, error: nil)
     }
 
@@ -31,6 +33,7 @@ class PlaySoundsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    //MARK: - Buttons
     @IBAction func slowSound(sender: UIButton) {
         audioPlayer.stop()
         audioPlayer.rate = 0.5
@@ -41,7 +44,6 @@ class PlaySoundsViewController: UIViewController {
         audioPlayer.stop()
         audioPlayer.rate = 1.5
         audioPlayer.play()
-    
     }
     
     @IBAction func playChipmunkAudio(sender: UIButton) {
@@ -51,10 +53,12 @@ class PlaySoundsViewController: UIViewController {
     @IBAction func playVaderAudio(sender: UIButton) {
         playAudioWithVariablePitch(-1000)
     }
+    
     @IBAction func stop(sender: UIButton) {
         audioPlayer.stop()
     }
     
+    //MARK: - Helper
     func playAudioWithVariablePitch(pitch: Float){
         audioPlayer.stop()
         audioEngine.stop()
@@ -70,19 +74,11 @@ class PlaySoundsViewController: UIViewController {
         audioEngine.connect(audioPlayerNode, to: changePitchEffect, format: nil)
         audioEngine.connect(changePitchEffect, to: audioEngine.outputNode, format: nil)
         
+        // Add audioFile to node
         audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
         audioEngine.startAndReturnError(nil)
         
         audioPlayerNode.play()
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
